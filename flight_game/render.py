@@ -9,9 +9,8 @@ it just reads a VehicleState/DuckInstructor and draws them.
 import math
 import pygame
 
-from .constants import SCREEN_WIDTH, SCREEN_HEIGHT
+from .constants import SCREEN_WIDTH, SCREEN_HEIGHT, MACH1_MPS
 from .vehicles import VehicleState, VehicleConfig
-from .duck_instructor import DuckInstructor
 
 SKY_TOP = (30, 60, 120)
 SKY_BOTTOM = (140, 200, 245)
@@ -100,6 +99,15 @@ def draw_plane(screen, state: VehicleState, config: VehicleConfig):
     color = (255, 200, 40) if not state.stalled else (255, 90, 90)
     pygame.draw.polygon(screen, color, points)
 
+    if state.afterburner_on:
+        flame_len = 34 + 10 * math.sin(state.time_s * 30.0)
+        flame_pts = [
+            _rotate_to_screen(-L * 0.6, W * 0.6, state.pitch_deg, center_x, center_y),
+            _rotate_to_screen(-L * 0.6 - flame_len, 0, state.pitch_deg, center_x, center_y),
+            _rotate_to_screen(-L * 0.6, -W * 0.6, state.pitch_deg, center_x, center_y),
+        ]
+        pygame.draw.polygon(screen, (255, 140, 30), flame_pts)
+
     # Nose line (where you're POINTED)
     nose_end = _rotate_to_screen(70, 0, state.pitch_deg, center_x, center_y)
     pygame.draw.line(screen, (255, 255, 255), (center_x, center_y), nose_end, 2)
@@ -121,12 +129,13 @@ def draw_hud(screen, font, state: VehicleState, config: VehicleConfig, aoa_deg: 
     lines = [
         f"Altitude: {state.y:6.0f} m",
         f"Speed:    {airspeed:6.1f} m/s",
+        f"Mach:     {airspeed / MACH1_MPS:6.2f}",
         f"Pitch:    {state.pitch_deg:+6.1f} deg",
     ]
     aoa_color = HUD_WARN if state.stalled else HUD_TEXT
     lines.append(f"AoA:      {aoa_deg:+6.1f} deg")
 
-    panel = pygame.Surface((230, 150), pygame.SRCALPHA)
+    panel = pygame.Surface((230, 170), pygame.SRCALPHA)
     panel.fill((0, 0, 0, 130))
     screen.blit(panel, (10, 10))
 
@@ -161,7 +170,10 @@ def draw_controls_hint(screen, font):
     screen.blit(surf, (SCREEN_WIDTH - surf.get_width() - 14, 12))
 
 
-def draw_duck_bubble(screen, font, instructor: DuckInstructor):
+def draw_duck_bubble(screen, font, instructor):
+    """instructor is duck-typed: any object with .message (str) and
+    .urgent (bool) works, so both DuckInstructor and DuckInstructorJet
+    can share this renderer."""
     box_y = SCREEN_HEIGHT - BUBBLE_HEIGHT
     panel = pygame.Surface((SCREEN_WIDTH, BUBBLE_HEIGHT), pygame.SRCALPHA)
     panel.fill((10, 10, 20, 210))
