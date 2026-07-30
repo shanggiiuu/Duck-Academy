@@ -162,10 +162,12 @@ def draw_hud(screen, font, state: VehicleState, config: VehicleConfig, aoa_deg: 
     if state.stalled:
         warn = font.render("STALL", True, HUD_WARN)
         screen.blit(warn, (SCREEN_WIDTH // 2 - warn.get_width() // 2, 20))
+    elif state.afterburner_on:
+        warn = font.render("AFTERBURNER", True, (255, 150, 30))
+        screen.blit(warn, (SCREEN_WIDTH // 2 - warn.get_width() // 2, 20))
 
 
-def draw_controls_hint(screen, font):
-    text = "Up/Down: Nose   W/S: Throttle   R: Restart   Esc: Quit"
+def draw_controls_hint(screen, font, text="Up/Down: Nose   W/S: Throttle   R: Restart   Esc: Quit"):
     surf = font.render(text, True, (230, 230, 230))
     screen.blit(surf, (SCREEN_WIDTH - surf.get_width() - 14, 12))
 
