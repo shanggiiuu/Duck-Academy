@@ -1,0 +1,95 @@
+{
+  "save_version": 1,
+  "academy_name": "Duck Aerospace Academy",
+  "play_time_seconds": 0.0,
+  "space_coins": 500,
+  "ducks": {
+    "a289bade": {
+      "name": "Quackers",
+      "traits": [
+        "loves_engineering",
+        "afraid_of_heights"
+      ],
+      "stats": {
+        "intelligence": 6,
+        "strength": 1,
+        "piloting": 2,
+        "engineering": 8,
+        "morale": 100,
+        "experience": 0
+      },
+      "status": "idle",
+      "duck_id": "a289bade"
+    },
+    "8ec176ba": {
+      "name": "Captain Fluff",
+      "traits": [
+        "excellent_pilot",
+        "gets_hungry_often"
+      ],
+      "stats": {
+        "intelligence": 4,
+        "strength": 1,
+        "piloting": 9,
+        "engineering": 1,
+        "morale": 100,
+        "experience": 0
+      },
+      "status": "idle",
+      "duck_id": "8ec176ba"
+    }
+  },
+  "buildings": {
+    "training_center": {
+      "building_type": "training_center",
+      "level": 2,
+      "max_level": 5
+    },
+    "flight_simulator": {
+      "building_type": "flight_simulator",
+      "level": 1,
+      "max_level": 5
+    },
+    "rocket_hangar": {
+      "building_type": "rocket_hangar",
+      "level": 1,
+      "max_level": 5
+    },
+    "cafeteria": {
+      "building_type": "cafeteria",
+      "level": 1,
+      "max_level": 5
+    },
+    "dormitory": {
+      "building_type": "dormitory",
+      "level": 1,
+      "max_level": 5
+    },
+    "research_lab": {
+      "building_type": "research_lab",
+      "level": 1,
+      "max_level": 5
+    },
+    "mission_control": {
+      "building_type": "mission_control",
+      "level": 1,
+      "max_level": 5
+    }
+  },
+  "missions": {
+    "weather_balloon_test": {
+      "mission_id": "weather_balloon_test",
+      "name": "Weather Balloon Test",
+      "status": "completed",
+      "required_stats": {
+        "piloting": 1
+      },
+      "reward_coins": 100,
+      "assigned_duck_id": "8ec176ba"
+    }
+  },
+  "research": {},
+  "unlocked_planets": [
+    "Earth"
+  ]
+}
