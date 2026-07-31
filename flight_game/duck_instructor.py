@@ -14,10 +14,10 @@ from .vehicles import VehicleState, Controls
 from .constants import SAFE_LANDING_VSPEED_MPS, SAFE_LANDING_AOA_DEG
 
 INTRO_TEXT = (
-    "Hi, I'm Professor Quackers! Every flight is a tug-of-war between four "
-    "forces: THRUST pushes you forward, DRAG resists that push, LIFT holds "
-    "you up, and WEIGHT (gravity) pulls you down. Get the balance right and "
-    "you fly. Press SPACE to start the engine."
+    "Hi, I'm Professor Quackers! Flying is a tug-of-war between four "
+    "pushes and pulls: THRUST pushes you forward, DRAG pushes back, LIFT "
+    "pushes you up, and WEIGHT (that's just gravity) pulls you down. Get "
+    "them balanced right and you fly! Press SPACE to start the engine."
 )
 
 MESSAGE_HOLD_S = 7.0
@@ -47,7 +47,7 @@ class DuckInstructor:
     def begin(self) -> None:
         self.started = True
         self._say(
-            "Engine's running! Hold [W] to push the throttle up.",
+            "Engine's running! Hold down the [W] key to add power.",
         )
 
     def reset_for_retry(self) -> None:
@@ -82,9 +82,10 @@ class DuckInstructor:
         if not self._shown_throttle_tip and state.throttle > 0.05:
             self._shown_throttle_tip = True
             self._say(
-                "That's THRUST! The propeller flings air backward, and the "
-                "air shoves you forward — Newton's third law. [S] eases the "
-                "throttle back down."
+                "That push you feel is THRUST! The propeller throws air "
+                "backward, so the air pushes you forward — like paddling a "
+                "boat, but with air. Hold [S] to slow the throttle back "
+                "down."
             )
             return
 
@@ -96,10 +97,10 @@ class DuckInstructor:
         ):
             self._shown_lift_tip = True
             self._say(
-                "Feel that shudder? Air is rushing over your wings. Ease "
-                "[Up Arrow] to tilt the nose up a little — that's called "
-                "ANGLE OF ATTACK, and it's what makes wings grab the air "
-                "and generate LIFT."
+                "Feel that shake? Air is rushing over your wings now. Tap "
+                "[Up Arrow] to tilt your nose up just a little — tilting "
+                "the wing like that is called ANGLE OF ATTACK, and it's "
+                "how wings grab the air to make LIFT."
             )
             return
 
@@ -107,11 +108,10 @@ class DuckInstructor:
         if "takeoff" in events and not self._shown_takeoff:
             self._shown_takeoff = True
             self._say(
-                "You're airborne! LIFT is now winning against WEIGHT. See "
-                "the little diamond marker out front? That's your FLIGHT "
-                "PATH — where you're really going. The line is your NOSE — "
-                "where you're pointed. The gap between them is your angle "
-                "of attack."
+                "You're flying! LIFT is now winning the tug-of-war against "
+                "WEIGHT. See the white line? That's where your NOSE is "
+                "pointed. The green circle is your FLIGHT PATH — where "
+                "you're actually going. They're not always the same spot!"
             )
             return
 
@@ -120,23 +120,24 @@ class DuckInstructor:
             if not self._shown_stall_tip:
                 self._shown_stall_tip = True
                 self._say(
-                    "STALL! Your nose is pointed way above your flight path "
-                    "— too much angle of attack. The wings can't grip the "
-                    "air anymore and lift collapses. Push the nose DOWN to "
-                    "recover!",
+                    "STALL! Your nose tilted up too far above where you're "
+                    "actually going. The wings lost their grip on the air, "
+                    "so LIFT disappeared. Push the nose DOWN to grab the "
+                    "air again!",
                     urgent=True,
                 )
             else:
                 self._say(
-                    "Stalling again — nose down, let speed build back up!",
+                    "Stalling again — nose down, let your speed build back "
+                    "up!",
                     urgent=True,
                 )
             return
 
         if "stall_recovered" in events:
             self._say(
-                "Nice recovery! Lower nose, more speed, air flowing "
-                "smoothly over the wings again — lift is back."
+                "Nice recovery! Nose is lower, speed is back up, and air "
+                "is flowing smoothly over your wings again — LIFT is back."
             )
             return
 
@@ -148,9 +149,9 @@ class DuckInstructor:
         ):
             self._shown_altitude_tip = True
             self._say(
-                "Notice the sky feels thinner up here? Less air means less "
-                "LIFT for your wings, but also less DRAG holding you back — "
-                "that trade-off is why planes cruise up high."
+                "Notice the air feels thinner up here? Less air means less "
+                "LIFT for your wings — but also less DRAG slowing you down. "
+                "That trade-off is why real planes like to cruise up high."
             )
             return
 
@@ -158,10 +159,10 @@ class DuckInstructor:
         if "fuel_out" in events and not self._shown_fuel_tip:
             self._shown_fuel_tip = True
             self._say(
-                "Out of fuel — no more THRUST. Now it's just DRAG slowing "
-                "you and WEIGHT pulling you down against whatever LIFT your "
-                "speed can still make. You're gliding — aim for a soft "
-                "landing.",
+                "Out of fuel — no more THRUST pushing you forward. Now "
+                "it's just DRAG slowing you down and WEIGHT pulling you "
+                "toward the ground, fighting whatever LIFT your speed can "
+                "still make. You're gliding now — aim for a soft landing!",
                 urgent=True,
             )
             return
@@ -170,10 +171,10 @@ class DuckInstructor:
         if "landed" in events and not self._shown_landed:
             self._shown_landed = True
             self._say(
-                "Beautiful landing! You just flew the whole lesson: THRUST "
-                "vs DRAG controlled your speed, LIFT vs WEIGHT controlled "
-                "your altitude. That balance IS flight. Press [R] to fly "
-                "again."
+                "Beautiful landing! You just learned the whole lesson: "
+                "THRUST vs DRAG controlled your speed, LIFT vs WEIGHT "
+                "controlled your height. Balancing those four is what "
+                "flying really is. Press [R] to fly again!"
             )
             return
 
@@ -184,25 +185,22 @@ class DuckInstructor:
             too_steep = prev_aoa is not None and abs(prev_aoa) > SAFE_LANDING_AOA_DEG
             if too_fast and not too_steep:
                 self._say(
-                    f"Crashed — you touched down sinking faster than "
-                    f"{SAFE_LANDING_VSPEED_MPS:.0f} m/s. Cut the throttle "
-                    "earlier and ease off the dive sooner next time. "
-                    "Press [R] to try again.",
+                    "Crashed — you came down too fast and hit hard. Cut "
+                    "the throttle earlier next time, and level off before "
+                    "you touch the ground. Press [R] to try again.",
                     urgent=True,
                 )
             elif too_steep:
                 self._say(
-                    "Crashed — your nose was tipped up too far at "
-                    "touchdown (too much angle of attack) and the tail hit "
-                    "first. Keep the nose closer to level when you land. "
-                    "Press [R] to try again.",
+                    "Crashed — your nose was tilted up too far when you "
+                    "touched down, so the tail hit first. Keep the nose "
+                    "closer to level as you land. Press [R] to try again.",
                     urgent=True,
                 )
             else:
                 self._say(
                     "Crashed! Press [R] to try again — remember, gentle "
-                    "throttle and a shallow nose angle make for a soft "
-                    "landing.",
+                    "power and a level nose make for a soft landing.",
                     urgent=True,
                 )
             return
